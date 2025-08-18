@@ -1,0 +1,16 @@
+.zen-blurred {
+  filter: blur(4px);
+  transition: filter 0.3s ease;
+  cursor: pointer;
+}
+
+.zen-title-replacement {
+  font-style: italic;
+  color: #666;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+.zen-title-replacement:hover {
+  opacity: 1;
+}
