@@ -1,12 +1,33 @@
-// Zen Text Filter Content Script
-(function() {
-  'use strict';
+// Plugin Content Script
+(function () {
+  "use strict";
 
   // Keywords to filter
-  const keywords = [
-    'Trump', 'Donald Trump', 'Russia', 'Putin', 
-    'Israel', 'Netanyahu', 'Musk', 'Elon Musk', 'Republicans'
+  const dutchWords = [
+    "Verenigde Staten",
+    "VS",
+    "Rusland",
+    "republikein",
+    "Israël",
   ];
+  const internationalKeywords = [
+    "Trump",
+    "Donald",
+    "USA",
+    "U.S.",
+    "US",
+    "Russia",
+    "Putin",
+    "Israel",
+    "Netanyahu",
+    "Musk",
+    "Elon Musk",
+    "Republicans",
+    "China",
+    "Xi Jinping",
+  ];
+
+  const keywords = [...dutchWords, ...internationalKeywords];
 
   // Zen meditation quotes
   const zenQuotes = [
@@ -21,11 +42,11 @@
     "The way is not in the sky. The way is in the heart.",
     "Quiet the mind, and the soul will speak.",
     "Be content with what you have; rejoice in the way things are.",
-    "The root of suffering is resisting the certainty that no matter what the circumstances, uncertainty is all we truly have."
+    "The root of suffering is resisting the certainty that no matter what the circumstances, uncertainty is all we truly have.",
   ];
 
   // Create regex pattern for keywords (case insensitive)
-  const keywordPattern = new RegExp(keywords.join('|'), 'gi');
+  const keywordPattern = new RegExp(keywords.join("|"), "gi");
 
   function getRandomZenQuote() {
     return zenQuotes[Math.floor(Math.random() * zenQuotes.length)];
@@ -36,27 +57,34 @@
   }
 
   function isHeadingElement(element) {
-    const headingTags = ['H1', 'H2', 'H3', 'H4', 'H5', 'H6'];
+    const headingTags = ["H1", "H2", "H3", "H4", "H5", "H6"];
     return headingTags.includes(element.tagName);
   }
 
   function isTitleElement(element) {
     // Check for common title selectors
     const titleSelectors = [
-      '.title', '.headline', '.post-title', '.article-title',
-      '.entry-title', '.story-title', '.news-title'
+      ".title",
+      ".headline",
+      ".post-title",
+      ".article-title",
+      ".entry-title",
+      ".story-title",
+      ".news-title",
     ];
-    
-    return titleSelectors.some(selector => 
-      element.matches(selector) || element.closest(selector)
-    ) || isHeadingElement(element);
+
+    return (
+      titleSelectors.some(
+        (selector) => element.matches(selector) || element.closest(selector)
+      ) || isHeadingElement(element)
+    );
   }
 
   function processTextNode(textNode) {
     if (!textNode.textContent.trim()) return;
-    
+
     const parent = textNode.parentElement;
-    if (!parent || parent.classList.contains('zen-processed')) return;
+    if (!parent || parent.classList.contains("zen-processed")) return;
 
     if (containsKeywords(textNode.textContent)) {
       // Check if this is a title element
@@ -64,17 +92,35 @@
         // Replace title with zen quote
         const zenQuote = getRandomZenQuote();
         parent.textContent = zenQuote;
-        parent.classList.add('zen-title-replacement', 'zen-processed');
+        parent.classList.add("zen-title-replacement", "zen-processed");
       } else {
         // Blur regular text
-        parent.classList.add('zen-blurred', 'zen-processed');
+        parent.classList.add("zen-blurred", "zen-processed");
       }
     }
   }
 
   function processElement(element) {
-    if (element.classList && element.classList.contains('zen-processed')) {
+    if (element.classList && element.classList.contains("zen-processed")) {
       return;
+    }
+
+    // Process images
+    if (element.tagName === "IMG") {
+      // Check if image alt text or surrounding context contains keywords
+      const altText = element.alt || "";
+      const titleText = element.title || "";
+      const parentText = element.parentElement?.textContent || "";
+
+      if (
+        containsKeywords(altText) ||
+        containsKeywords(titleText) ||
+        containsKeywords(parentText)
+      ) {
+        element.src = chrome.runtime.getURL("img/zen-flower.jpg");
+        element.classList.add("zen-processed");
+        return; // Don't process children
+      }
     }
 
     // Process text content
@@ -94,9 +140,9 @@
     processElement(document.body);
 
     // Set up observer for dynamic content
-    const observer = new MutationObserver(function(mutations) {
-      mutations.forEach(function(mutation) {
-        mutation.addedNodes.forEach(function(node) {
+    const observer = new MutationObserver(function (mutations) {
+      mutations.forEach(function (mutation) {
+        mutation.addedNodes.forEach(function (node) {
           if (node.nodeType === Node.ELEMENT_NODE) {
             processElement(node);
           } else if (node.nodeType === Node.TEXT_NODE) {
@@ -109,13 +155,13 @@
     observer.observe(document.body, {
       childList: true,
       subtree: true,
-      characterData: true
+      characterData: true,
     });
   }
 
   // Initialize when DOM is ready
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeFilter);
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initializeFilter);
   } else {
     initializeFilter();
   }

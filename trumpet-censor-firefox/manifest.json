@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
-  "name": "Color-Coded Text Filter",
+  "name": "Clown Filter 3000",
   "version": "1.0",
-  "description": "Colors political text and shows silly jokes on hover for a more engaging browsing experience",
+  "description": "Blurs political text and replaces titles with zen quotes for a more peaceful browsing experience",
   
   "permissions": [
     "activeTab",
@@ -20,7 +20,7 @@
   
   "browser_action": {
     "default_popup": "popup.html",
-    "default_title": "Color-Coded Text Filter",
+    "default_title": "Clown Filter 3000",
     "default_icon": {
       "16": "icon16.png",
       "48": "icon48.png",

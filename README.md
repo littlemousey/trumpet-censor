@@ -1,4 +1,4 @@
-# trumpet-censor
+# trumpet-censor (or renamed as Clown Filter 3000)
 Hides political text and replaces titles with zen quotes for a more peaceful browsing experience
 
 
@@ -16,3 +16,6 @@ Hides political text and replaces titles with zen quotes for a more peaceful bro
 - Enable Developer Mode (toggle in top right corner)
 - Click "Load unpacked" and select your folder
 - The extension is now active
+
+## Credits
+- Thanks Pixabay for the free images
